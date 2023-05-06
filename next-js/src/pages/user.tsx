@@ -3,17 +3,17 @@ import axios from 'axios';
 
 export default function User() {
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleSubmit = async (event: any) => {
         event.preventDefault();
         let user = {
             name: name,
-            email: email
+            password: password
         }
         try {
             setName('')
-            setEmail('')
+            setPassword('')
             const res = await axios.post('http://localhost:5001/users', user);
 
             console.log(res)
@@ -39,7 +39,7 @@ export default function User() {
                 <br />
                 <div>
                     <label>Password :</label>
-                    <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input type="text" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <br />
                 <button type="submit">Create</button>

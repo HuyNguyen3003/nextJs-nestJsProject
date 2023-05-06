@@ -5,26 +5,52 @@ import axios from 'axios';
 export default function detail() {
 
 
-    const [idUer, setId] = useState('');
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [password, setEmail] = useState('');
 
     const router = useRouter();
     const { id } = router.query;
 
     useEffect(() => {
-        if (id) {
-            setId(id)
+        setName(router.query.name);
+        setEmail(router.query.password);
 
+    }, [])
+
+    let handleChangle = async () => {
+        const Users = {
+            name: name,
+            password: password,
+            id: id
         }
-    }, [id])
+        try {
+            const res = await axios.put('http://localhost:5001/users', Users)
+            if (res) {
+                router.back();
+            }
 
-    let handleChangle = () => {
+        } catch (e) {
+            console.log(e)
+        }
+
 
     }
 
-    let handleDelete = () => {
+    let handleDelete = async () => {
+        const Users = {
+            name: name,
+            password: password,
+            id: id
+        }
+        try {
+            const res = await axios.delete('http://localhost:5001/users', { data: Users })
+            if (res) {
+                router.back();
+            }
 
+        } catch (e) {
+            console.log(e)
+        }
     }
 
 
@@ -33,7 +59,7 @@ export default function detail() {
     return (
         <>
             <br />
-            <div>detail user {idUer}</div>
+            <div>detail user {id}</div>
             <br />
 
             <div>
@@ -42,8 +68,8 @@ export default function detail() {
             </div>
             <br />
             <div>
-                <label>Email :</label>
-                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <label>Password :</label>
+                <input type="text" value={password} onChange={(e) => setEmail(e.target.value)} />
             </div>
             <br />
             <div><button onClick={() => handleChangle()}>Changle</button></div>

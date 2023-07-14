@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Coffee } from './entities/coffe.entiti';
 import { Connection, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -18,11 +18,17 @@ export class CoffeesService {
         private readonly coffeeRepository: Repository<Coffee>,
         @InjectRepository(Flavor)
         private readonly flavorRepository: Repository<Flavor>,
-        private readonly connecttion: Connection
-    ) { }
+        private readonly connecttion: Connection,
+        @Inject('COFFEE_BRANDS') CoffeeNewBrand: string[]
+    ) {
+    }
+
+
 
     async findAll(paginationQuery: PaginationQueryDto) {
         const { limit, offset } = paginationQuery
+
+
 
         return await this.coffeeRepository.find({
             relations: ['flavors'],

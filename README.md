@@ -9,6 +9,5 @@
 +NextJs:
 --
 + nextJsV1: https://www.youtube.com
-+ nextJsV2: comming soon
++ nextJsV2: https://www.udemy.com/course/nextjs-react-the-complete-guide/
 + nextJsV3: comming soon
-  

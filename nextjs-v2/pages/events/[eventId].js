@@ -1,12 +1,15 @@
-import { Fragment } from "react";
+import { Fragment } from 'react';
 
-import { getEventById, getFeaturedEvents } from "../../helpers/api-util";
-import EventSummary from "../../components/event-detail/event-summary";
-import EventLogistics from "../../components/event-detail/event-logistics";
-import EventContent from "../../components/event-detail/event-content";
+import { getEventById, getFeaturedEvents } from '../../helpers/api-util';
+import EventSummary from '../../components/event-detail/event-summary';
+import EventLogistics from '../../components/event-detail/event-logistics';
+import EventContent from '../../components/event-detail/event-content';
+import ErrorAlert from '../../components/ui/error-alert';
 
 function EventDetailPage(props) {
-  if (!props.events) {
+  const event = props.selectedEvent;
+
+  if (!event) {
     return (
       <div className="center">
         <p>Loading...</p>
@@ -16,46 +19,42 @@ function EventDetailPage(props) {
 
   return (
     <Fragment>
-      <EventSummary title={props.events.title} />
+      <EventSummary title={event.title} />
       <EventLogistics
-        date={props.events.date}
-        address={props.events.location}
-        image={props.events.image}
-        imageAlt={props.events.title}
+        date={event.date}
+        address={event.location}
+        image={event.image}
+        imageAlt={event.title}
       />
       <EventContent>
-        <p>{props.events.description}</p>
+        <p>{event.description}</p>
       </EventContent>
     </Fragment>
   );
 }
 
-export default EventDetailPage;
+export async function getStaticProps(context) {
+  const eventId = context.params.eventId;
 
-export const getStaticProps = async (context) => {
-  const id = context.params.eventId;
-  const Events = await getEventById(id);
-
-  if (!Events) {
-    return {
-      notFound: true, // Trả về trang 404 (Page Not Found)
-    };
-  }
+  const event = await getEventById(eventId);
 
   return {
     props: {
-      events: Events,
+      selectedEvent: event
     },
-    revalidate: 30,
+    revalidate: 30
   };
-};
+}
 
-export const getStaticPaths = async () => {
+export async function getStaticPaths() {
   const events = await getFeaturedEvents();
-  const paths = events.map((event) => ({ params: { eventId: event.id } }));
+
+  const paths = events.map(event => ({ params: { eventId: event.id } }));
 
   return {
     paths: paths,
-    fallback: "blocking",
+    fallback: 'blocking'
   };
-};
+}
+
+export default EventDetailPage;
